@@ -1,5 +1,5 @@
 from django.db import models
-from productos.models import Producto
+from productos.models import Producto,Variacion
 
 
 # Create your models here.
@@ -14,6 +14,7 @@ class Carro(models.Model):
 class CarroItem(models.Model):
 
     producto= models.ForeignKey(Producto,on_delete=models.CASCADE)
+    variaciones=models.ManyToManyField(Variacion, blank=True)
     cart= models.ForeignKey(Carro,on_delete=models.CASCADE)
     cantidad= models.IntegerField()
     activado= models.BooleanField(default=True)

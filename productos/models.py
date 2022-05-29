@@ -1,3 +1,4 @@
+
 from django.urls import reverse
 from django.db import models
 from categoria.models import Categoria
@@ -22,3 +23,34 @@ class Producto(models.Model):
 
     def __str__(self):
         return  self.nombre_producto
+
+
+# para filtar  el color y talla
+class VariacionManager(models.Manager):
+      
+      def colors(self):
+          return super(VariacionManager, self).filter(variacion_categoria='color', valido=True)
+       
+      def tallas(self):
+          return super(VariacionManager, self).filter(variacion_categoria='talla', valido=True)
+
+variacion_categoria_choice=(
+  ('color','color'),
+  ('talla','talla'),
+
+)
+
+# sirve  para hacer variaciones  como color  o talla
+class Variacion(models.Model):
+    
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    variacion_categoria= models.CharField(max_length=100, choices=variacion_categoria_choice)
+    variacion_value= models.CharField(max_length=100)
+    valido=models.BooleanField(default=True)
+    fecha_creacion= models.DateTimeField(auto_now=True)
+    
+    objects= VariacionManager()
+
+    def __str__(self) :
+        return self.variacion_categoria + ':' + self.variacion_value
+
